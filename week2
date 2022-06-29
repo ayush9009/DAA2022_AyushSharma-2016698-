@@ -1,0 +1,111 @@
+Problem 1:
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <stdlib.h>
+#include <unordered_map>
+using namespace std;
+
+int main(){
+     int t;
+     cin>>t;
+     while(t--){
+          cout<<endl;
+          int n;
+          cin>>n;
+          unordered_map<int, int> mp;
+          vector<int> num;
+          for(int i=0; i<n; i++){
+               int x;
+               cin>>x;
+               num.push_back(x);
+               mp[x]++;
+          }
+          int k;
+          cin>>k;
+          auto it = mp.find(k);
+          if(it == mp.end())
+               cout<<"Key not present"<<endl;
+          else
+               cout<<k<<"-"<<mp[k];
+     }
+}
+
+Problem 2:
+#include <algorithm>
+#include <iostream>
+#include <stdlib.h>
+#include <vector>
+using namespace std;
+
+int main(){
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        vector<int> num;
+        for(int i=0; i<n; i++){
+             int x;
+             cin>>x;
+             num.push_back(x);
+        }
+         int k=0;
+         int l=0,r=0;
+         int flag = 1;
+         for( k=n-1 ; k>1; k--){
+              l = 0;
+              r =k-1;
+              while(l < r){
+                   if(num[l] + num[r] == num[k]){
+                        cout<<l+1<<" "<<r+1<<" "<<k+1<<endl;
+                        flag = 0;
+                        break;
+                   }
+                   if(num[l] + num[r] > num[k])
+                        r--;
+                   else
+                        l++;
+              }
+         }
+         if(flag)
+              cout<<"No sequence found\n";
+    }
+     return 0;
+}
+
+Problem 3:
+#include <algorithm>
+#include <iostream>
+#include <stdlib.h>
+#include <vector>
+using namespace std;
+
+int main(){
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        vector<int> num;
+        for(int i=0; i<n; i++){
+             int x;
+             cin>>x;
+             num.push_back(x);
+        }
+         int k;
+         cin>>k;
+         int count = 0;
+        sort(num.begin(), num.end());
+         
+         for(int i=0; i<n; i++){
+              for(int j=i+1; j<n; j++){
+                   if(num[j] - num[i] == k)
+                        count++;
+                   else if (num[j] - num[i] > k)
+                        break;
+              }
+         }
+         cout<<count<<endl;
+    }
+}
