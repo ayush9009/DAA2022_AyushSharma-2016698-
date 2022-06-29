@@ -1,0 +1,139 @@
+Problem 1:
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+bool compare(pair<int,int> a,pair<int,int> b){
+    if(a.first==b.first)
+        return a.second<b.second;
+    else
+        return a.first<b.first;
+}
+int check_index(int a[],int b[],int i,int j,bool complete[],int n){
+    for(int k=0;k<n;k++){
+        if(a[k]==i&&b[k]==j&&!complete[k]){
+            complete[k]=true;
+            return k+1;
+        }
+    }
+}
+int main(){
+    int n,i;
+    cin>>n;
+    vector<pair<int,int>> v;
+    int tt[n],e[n];
+    for(i=0;i<n;i++)
+        cin>>tt[i];
+    for(i=0;i<n;i++)
+        cin>>e[i];
+    for(i=0;i<n;i++)
+        v.push_back(make_pair(e[i],tt[i]));
+    vector<int> t;
+    sort(v.begin(),v.end());
+    int count=0,j=0;
+    bool comp[n]={false};
+    for(int i=0;i<n;i++){
+        if(v[i].first-j>=v[i].second){
+            j=j+v[i].second;
+            count++;
+            t.push_back(check_index(e,tt,v[i].first,v[i].second,comp,n));
+        }
+    }
+    cout<<"Max number of task: "<<count;
+    cout<<"\nSelected task no: ";
+    for(int i=0;i<t.size();i++){
+        cout<<t.at(i)<<",";
+    }
+    return 0;
+}
+
+Problem 2:
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+struct knapsack{
+    int value,weight;
+};
+
+bool compare(struct knapsack a,struct knapsack b){
+    return ( (double)a.value/a.weight > (double)b.value/b.weight );
+}
+
+int item_no(int a[],int b[],int n, double val){
+    for(int i=0;i<n;i++){
+        if((double)b[i]/a[i]==val)
+            return i;
+    }
+}
+
+int main(){
+    int n,i;
+    cin>>n;
+    int w[n],v[n];
+    for(i=0;i<n;i++)
+        cin>>w[i];
+    for(i=0;i<n;i++)
+        cin>>v[i];
+
+    struct knapsack a[n];
+    for(i=0;i<n;i++){
+        a[i].weight = w[i];
+        a[i].value  = v[i];
+    }
+    sort(a,a+n,compare);
+    int k;
+    float profit = 0;
+    cin>>k;
+    int temp=k;
+    for(i =0;i<n;i++){
+        if(k==0)
+            break;
+        if(k>a[i].weight){
+            k = k - a[i].weight;
+            profit = profit + a[i].value;
+        }
+        else{
+            profit = profit + k* ((double)a[i].value/a[i].weight);
+            k=0;
+        }
+    }
+    cout<<"\n\nMaximum Profit: "<<profit<<endl;
+    cout<<"\n\nItem  |  Weight\n";
+    cout<<"---------------\n";
+    for(int j=0;j<i-1;j++){
+        cout<<item_no(w,v,n,(double)a[j].value/a[j].weight)+1<<"     |    "<<a[j].weight<<endl;
+        temp-=a[j].weight;
+    }
+    cout<<item_no(w,v,n,(double)a[i-1].value/a[i-1].weight)+1<<"     |    "<<temp<<endl;
+    return 0;
+}
+
+Problem 3:
+#include<iostream>
+#include<queue>
+#include<algorithm>
+using namespace std;
+
+int main(){
+    int n,a;
+    cin>>n;
+    priority_queue<int ,vector<int>,greater<int>> minheap;
+    for(int i=0;i<n;i++){
+        cin>>a;
+        minheap.push(a);
+    }
+    int res=0;
+    while(minheap.size()>1){
+        int e1 = minheap.top();
+        minheap.pop();
+        int e2 = minheap.top();
+        minheap.pop();
+        int temp=e1+e2;
+        res+=temp;
+        minheap.push(e1+e2);
+    }
+    cout<<res;
+    return 0;
+}
