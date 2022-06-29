@@ -1,0 +1,191 @@
+Problem1:
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct node{
+     int u,v,wt;
+     node(int a, int b, int c){
+          u = a;
+          v = b;
+          wt = c;
+     }
+};
+
+bool comp(node a, node b){
+     return a.wt > b.wt;
+}
+
+int find_par(int n, vector<int>& parent){
+     if(n == parent[n])
+          return n;
+     parent[n] = find_par(parent[n], parent);
+     return parent[n];
+}
+
+void unionn(int u, int v, vector<int>& rank, vector<int>& parent){
+     u = find_par(u, parent);
+     v = find_par(v, parent);
+     
+     if(rank[u] > rank[v])
+          parent[v] = u;
+     else if(rank[v] > rank[u])
+          parent[u] = v;
+     else{
+          parent[v] = u;
+          rank[u]++;
+     }
+}
+                                                                 
+
+int main(){
+     int n;
+     cin>>n;
+     int wt;
+     vector<node> edge;
+     for(int i=0; i<n; i++){
+          for(int j=0; j<n; j++){
+               cin>>wt;
+               if(wt!=0){
+                    edge.push_back(node(i,j,wt));
+               }
+          }
+     }
+     sort(edge.begin(), edge.end(), comp);
+     vector<int> parent(n);
+     
+     for(int i=0; i<n; i++)
+          parent[i] = i;
+     
+     vector<int> rank(n, 0);
+     int cost=0;
+     vector<pair<int, int>> mst;
+     
+     for(auto it : edge){
+          if( find_par(it.u, parent) != find_par(it.v, parent)){
+               cost += it.wt;
+               mst.push_back({it.u, it.v});
+               unionn(it.u, it.v, rank, parent);
+          }
+     }
+     cout<<"Minimum Spanning Weight: "<<cost<<endl;
+     return 0;
+}
+
+Problem 2:
+
+/* 0 = not colored
+   1 = Red
+   -1 = Blue
+*/
+
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+bool bipartite(int source, vector<int> adj[], int color[]){
+     queue<int> q;
+     q.push(source);
+     color[source] = 1;
+
+     while(!q.empty()){
+          int node = q.front();
+          q.pop();
+
+          for(auto it : adj[node]){
+               if(color[it] == -1){
+                    color[it] = 1 - color[node];
+                    q.push(it);
+               }
+               else if(color[it] == color[node])
+                    return false; 
+               }
+          }
+     return true;
+}
+
+bool check_bipartite(vector<int> adj[], int n) {
+    int color[n];
+    memset(color, -1, sizeof color);
+    for(int i = 0;i<n;i++) {
+        if(color[i] == -1) {
+            if(!bipartite(i, adj, color)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+int main(){
+     int n;
+     cin>>n;
+     vector<int> adj[n];
+     for(int i=0; i<n; i++){
+          for(int j=0; j<n; j++){
+               int x;
+               cin>>x;
+               if(x != 0){
+                    adj[i].push_back(j);
+               }
+          }
+     }
+     if(check_bipartite(adj, n))
+          cout<<"Bipartite"<<endl;
+     else
+          cout<<"Not Bipartite"<<endl;
+     return 0;
+}
+
+Problem 3:
+#include <iostream>
+#include <vector>
+     
+using namespace std;
+     
+bool iscycle(int i, vector<int>& visit, vector<int> & dfsvisit, vector<int> adj[]){
+     visit[i] = 1;
+     dfsvisit[i] = 1;
+     
+     for(auto it : adj[i]){
+          if(!visit[it]){
+               if(iscycle(it, visit, dfsvisit, adj))
+                    return true;
+          }
+          else if(dfsvisit[it])
+               return true;
+     }
+     dfsvisit[i] = 0;
+     return false;
+}
+     
+int main()
+{
+    int n,x;
+     cin>>n;
+    vector<int> adj[n+1];
+    for(int i=1; i<=n; i++){
+        for(int j=1; j<=n; j++){
+            cin>>x;
+            if(x == 1){
+                adj[i].push_back(j);
+            }
+        }
+    }
+     
+     vector<int> visit(n+1, 0);
+     vector<int> dfsvisit(n+1, 0);
+     
+     for(int i=1; i<=n; i++){
+          if(!visit[i]){
+               if(iscycle(i, visit, dfsvisit ,adj)){
+                    cout<<"Yes Cycle Exists"<<endl;
+                    return 0;
+               }
+          }
+     }
+     cout<<"No Cycle Exists"<<endl;
+     return 0;
+}
