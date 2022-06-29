@@ -1,0 +1,131 @@
+Problem 1:
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool partition(vector<int>& nums, int n, int sum, int s, int i){
+     if(sum < s)
+          return false;
+     
+     if(i == n){
+          if(sum == s)
+               return true;
+          else
+               return false;
+     }
+     s += nums[i];
+     if(partition(nums, n, sum, s, i+1))
+          return true;
+     s-= nums[i];
+     if(partition(nums, n, sum, s, i+1))
+          return true;
+     return false;
+}
+
+int main(){
+     int n;
+     cin>>n;
+     vector<int> nums(n);
+     for(int i=0; i<n; i++){
+          cin>>nums[i];
+     }
+     
+     int sum=0;
+     for(int i=0; i<n; i++)
+          sum += nums[i];
+     
+     if(sum & 1){
+          cout<<"no"<<endl;
+          return 0;
+     }
+     
+     if(partition(nums, n, sum/2, 0, 0))
+          cout<<"yes"<<endl;
+     else
+          cout<<"no"<<endl;
+     return 0;
+}
+
+Problem 2:
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int count(vector<int>& nums, int n, int N, int i, int sum){
+     if(n == i){
+          if(sum == N)
+               return 1;
+          else
+               return 0;
+     }
+     if(sum > N)
+          return 0;
+     
+     int take = count(nums, n, N, i, sum + nums[i]);
+     int not_take = count(nums, n, N, i+1, sum);
+     return take + not_take;
+}
+
+int main(){
+     int n;
+     cin>>n;
+     vector<int> nums(n);
+     for(int i=0; i<n; i++){
+          cin>>nums[i];
+     }
+     int N;
+     cin>>N;
+     cout<<count(nums, n, N, 0, 0)<<endl;
+     return 0;
+}
+
+Problem 3:
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool partition(vector<int>& nums, int n, int sum, int s, int i){
+     if(sum < s)
+          return false;
+     
+     if(i == n){
+          if(sum == s)
+               return true;
+          else
+               return false;
+     }
+     s += nums[i];
+     if(partition(nums, n, sum, s, i+1))
+          return true;
+     s-= nums[i];
+     if(partition(nums, n, sum, s, i+1))
+          return true;
+     return false;
+}
+
+int main(){
+     int n;
+     cin>>n;
+     vector<int> nums(n);
+     for(int i=0; i<n; i++){
+          cin>>nums[i];
+     }
+     
+     int sum=0;
+     for(int i=0; i<n; i++)
+          sum += nums[i];
+     
+     if(sum & 1){
+          cout<<"no"<<endl;
+          return 0;
+     }
+     
+     if(partition(nums, n, sum/2, 0, 0))
+          cout<<"yes"<<endl;
+     else
+          cout<<"no"<<endl;
+     return 0;
+}
